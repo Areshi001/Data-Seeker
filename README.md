@@ -26,40 +26,78 @@ Turn natural language questions into executable SQL against your database. `Data
 - Tavily Search API (optional)
 - `uv` for dependency resolution, syncing, and running
 
-## Architecture
-1. Extract schema using a SQLAlchemy-backed database adapter
-2. Feed schema + user question + recent conversation context to an OpenRouter model for SQL generation
-3. Optionally enrich the prompt with Tavily search context
-4. Clean and validate the generated SQL
-5. Run a heuristic SQL review for ranking, trend, and aggregation quality
-6. Execute SQL safely against the configured database
-7. Profile the result set and choose the best default visual
-8. Pass the result to a second OpenRouter model that roleplays as a senior data analyst
-9. Return a structured payload with answer, rows, SQL, profile, visual spec, and export content
+## Architecture & Implementation Flow
+
+Data Seeker is coordinated by a central pipeline that routes data between safety checks, databases, and AI models.
 
 ```mermaid
-flowchart LR
-    A[User question] --> B[Schema extraction]
-    B --> C[OpenRouter SQL model]
-    C --> D[SQL validation]
-    D --> E[Heuristic SQL review]
-    E --> F[Database execution]
-    F --> G[Data profiling and visual selection]
-    G --> H[Senior analyst rewrite]
-    H --> I[Streamlit dashboard]
+flowchart TD
+    subgraph UI ["User Interface (frontend.py)"]
+        UI_Input[User Input Query]
+        UI_Output[Render Analyst Brief, Plotly Chart, Schema Graph]
+    end
+
+    subgraph Orchestration ["Pipeline Coordination (services/pipeline.py)"]
+        P_Start[analyze_question]
+        P_End[Assemble QueryResult]
+    end
+
+    subgraph DatabaseLayer ["Database Adaption (services/database.py)"]
+        DB_Extract[Extract Schema Map & Graphviz DOT]
+        DB_Exec[Execute Clean SQL]
+    end
+
+    subgraph SQLGen ["SQL Generation (services/sql_generator.py)"]
+        Gen_Tavily[Fetch Web Context]
+        Gen_LLM[Call LLM for SQL]
+    end
+
+    subgraph Guards ["Security & Reviews"]
+        Guard_Validate[Sanitize & Guard SQL\nservices/sql_guard.py]
+        Review_Check[Check Intent Heuristics\nservices/sql_review.py]
+    end
+
+    subgraph VisLayer ["Visualization & Interpretation"]
+        Chart_Profile[Profile Data & Build Chart Spec\nservices/chart_builder.py]
+        LLM_Brief[Write Senior Analyst Briefing\nservices/analyst_writer.py]
+    end
+
+    UI_Input -->|Submit| P_Start
+    
+    %% 1. Schema Introspection
+    P_Start -->|1. extract_schema_text| DB_Extract
+    DB_Extract -->|Return cached schema| P_Start
+    
+    %% 2. Generate SQL
+    P_Start -->|2. text_to_sql| Gen_LLM
+    Gen_LLM -->|Optional Tavily search| Gen_Tavily
+    Gen_LLM -->|Generate SQL query| P_Start
+
+    %% 3. Validate
+    P_Start -->|3. validate_sql_query| Guard_Validate
+    Guard_Validate -->|Check syntax & blocklists| P_Start
+
+    %% 4. Review
+    P_Start -->|4. review_generated_sql| Review_Check
+    Review_Check -->|Verify aggregate intents| P_Start
+
+    %% 5. Execute
+    P_Start -->|5. execute_sql| DB_Exec
+    DB_Exec -->|Query database| P_Start
+
+    %% 6. Profile & Chart
+    P_Start -->|6. build_dataframe & profile| Chart_Profile
+    Chart_Profile -->|Recommend visualization| P_Start
+
+    %% 7. Briefing
+    P_Start -->|7. generate_analyst_response| LLM_Brief
+    LLM_Brief -->|Format markdown brief| P_Start
+
+    %% Return
+    P_Start --> P_End
+    P_End -->|QueryResult Payload| UI_Output
 ```
 
-```
-frontend.py
-└─ analyze_question()
-   ├─ services/database.py
-   ├─ services/sql_generator.py
-   ├─ services/sql_guard.py
-   ├─ services/sql_review.py
-   ├─ services/chart_builder.py
-   ├─ services/analyst_writer.py
-   └─ services/exporters.py
-```
 
 ## Prerequisites
 - Create OpenRouter credentials at [OpenRouter](https://openrouter.ai/)
