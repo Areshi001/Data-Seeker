@@ -129,7 +129,7 @@ The app now validates generated SQL before execution:
 
 ### Dashboard Behavior
 The Streamlit app now:
-- Renders an automatic chart based on the result shape
+- Renders an automatic chart based suggestion on the result shape
 - Renders a schema relationship graph with Graphviz
 - Preserves recent questions for follow-up context
 - Lets you filter categorical columns in the result set
@@ -159,7 +159,7 @@ The Streamlit app now:
 | Tavily request failed | Invalid key or network issue | Disable Tavily or check `TAVILY_API_KEY` |
 
 ## Limitations
-- **Chart Plotting Limitations**: The automatic chart generator might not render or display plots correctly for complex, nested, or heavily grouped query result profiles.
+- **Chart Ploting Limitations**: The automatic chart generator might not render or display plots correctly for complex, nested, or heavily grouped query result profiles.
 - **SQL Parser Constraints**: The safety validation uses a state-machine scanner that blocklist keywords to prevent writes; highly custom or non-standard queries might trigger false positives.
 
 ## Roadmap / Ideas
@@ -181,4 +181,4 @@ Executing arbitrary LLM-generated SQL can be risky. Restrict to read-only querie
 MIT (adjust in `pyproject.toml` if you choose a different one)
 
 ---
-Built with local AI + fast Python tooling.
+
