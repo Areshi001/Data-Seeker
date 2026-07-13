@@ -225,7 +225,7 @@ So the chart *spec* (e.g. "this is a datetime axis, use a line chart") can be ri
 <details>
 <summary>🎥 Click to view demo video</summary>
 
-<video src="https://github.com/Areshi001/Data-Seeker/raw/main/assets/DataSeeker.mp4" controls width="100%"></video>
+<video src="https://raw.githubusercontent.com/Areshi001/Data-Seeker/main/assets/DataSeeker.mp4" controls width="100%"></video>
 *Data Seeker in action — natural language to SQL, charts, and analyst brief*
 
 </details>
