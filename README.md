@@ -209,16 +209,26 @@ So the chart *spec* (e.g. "this is a datetime axis, use a line chart") can be ri
 - Add a persistent (cross-process) caching layer for schema reads and common questions
 - Add drill-down interactions that regenerate SQL from chart selections
 - Add automated tests for SQL validation and schema extraction
-- Add bundled drivers/setup instructions for Postgres and DuckDB## Demo / Screenshots
+- Add bundled drivers/setup instructions for Postgres and DuckDB
+
+## Demo / Screenshots
+
+<details>
+<summary>🖼️ Click to view screenshots</summary>
 
 ![Data Seeker - Dashboard](assets/Capture.PNG)
 ![Data Seeker - Query Results](assets/Capture1.PNG)
 ![Data Seeker - Charts & Visualization](assets/Capture2.PNG)
 
-### 🎥 Demo Video
+</details>
 
-<video src="assets/DataSeeker.mp4" controls width="100%"></video>
+<details>
+<summary>🎥 Click to view demo video</summary>
+
+<video src="https://github.com/Areshi001/Data-Seeker/raw/main/assets/DataSeeker.mp4" controls width="100%"></video>
 *Data Seeker in action — natural language to SQL, charts, and analyst brief*
+
+</details>
 
 ---
 
