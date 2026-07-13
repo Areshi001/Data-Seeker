@@ -209,9 +209,21 @@ So the chart *spec* (e.g. "this is a datetime axis, use a line chart") can be ri
 - Add a persistent (cross-process) caching layer for schema reads and common questions
 - Add drill-down interactions that regenerate SQL from chart selections
 - Add automated tests for SQL validation and schema extraction
-- Add bundled drivers/setup instructions for Postgres and DuckDB
+- Add bundled drivers/setup instructions for Postgres and DuckDB## Demo / Screenshots
+
+![Data Seeker - Dashboard](assets/Capture.PNG)
+![Data Seeker - Query Results](assets/Capture1.PNG)
+![Data Seeker - Charts & Visualization](assets/Capture2.PNG)
+
+### 🎥 Demo Video
+
+<video src="assets/DataSeeker.mp4" controls width="100%"></video>
+*Data Seeker in action — natural language to SQL, charts, and analyst brief*
+
+---
 
 ## Security Notes
+
 Executing LLM-generated SQL is inherently risky even with the guard in place. For anything beyond local/demo use, run the app against a database user with read-only permissions, and treat the keyword blocklist as a second line of defense, not the only one.
 
 ## Contributing
